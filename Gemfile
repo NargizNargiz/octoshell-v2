@@ -96,3 +96,5 @@ group :test do
   gem "phantomjs", github: "colszowka/phantomjs-gem"
   gem "codeclimate-test-reporter", require: false
 end
+
+gem 'rollback', path: 'rollback'
