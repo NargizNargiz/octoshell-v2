@@ -98,3 +98,4 @@ group :test do
 end
 
 gem 'rollback', path: 'rollback'
+gem 'rails-erd', group: :development
