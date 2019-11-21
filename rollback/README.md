@@ -1,6 +1,6 @@
 # Rollback
 Short description and motivation.
-
+Данное приложение реализует пошаговый откат
 ## Usage
 How to use my plugin.
 

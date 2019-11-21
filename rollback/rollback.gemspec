@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.version     = Rollback::VERSION
   spec.authors     = ["Nargiz"]
   spec.email       = ["nargiz1397@mail.ru"]
-  spec.homepage    = "TODO"
-  spec.summary     = "TODO: Summary of Rollback."
-  spec.description = "TODO: Description of Rollback."
+  spec.homepage    = ""
+  spec.summary     = ": Summary of Rollback."
+  spec.description = ": Description of Rollback."
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
