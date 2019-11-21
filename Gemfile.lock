@@ -250,6 +250,12 @@ PATH
       slim
       sqlite3 (~> 1.3.6)
 
+PATH
+  remote: rollback
+  specs:
+    rollback (0.1.0)
+      rails (~> 5.2.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -773,6 +779,7 @@ DEPENDENCIES
   rake
   reports!
   responders
+  rollback!
   rollbar
   rspec-rails
   rspec-sidekiq
