@@ -16,13 +16,13 @@ class Synchronizer
       nil
     end
   end
-
+# возвращает ключ
   def mock_ssh_key_path(key)
     path = "/tmp/octo-#{SecureRandom.hex}"
     File.open(path, "wb") { |f| f.write key }
     path
   end
-
+# запуск скриптов
   def run!
     cluster.log("--- START SYNC for project #{project.id}", project)
     cluster.log("\t project state: #{project.state}", project)
