@@ -1,0 +1,54 @@
+### [2.11.6] - 2021-08-25
+
+### Fixed 
+
+Many small fixes
+
+### [2.11.5] - 2021-07-06
+
+### Fixed 
+
+Many small fixes
+
+### [2.11.4] - 2021-06-11
+
+### Fixed 
+
+Many small fixes
+
+## [2.11.2] - 2021-04-06
+
+### Fixed 
+
+Many fixes at cloud_computing module
+
+- fix(cloud_computing): user links and uniqueness of validation
+- fix(cloud_computing): fix #terminate_access and DiskSizeModifier
+- fix(cloud_computing): fix errors in ordinary user virtual machine controller
+- fix(cloud_computing): user links and uniqueness of validation (#201)
+- fix(cloud_computing): user links and uniqueness of validation, fix #terminate_access and DiskSizeModifier
+
+## [2.11.1] - 2021-03-12
+
+### Fixed
+
+- helpers overlap
+
+## [2.11.0] - 2021-03-05
+
+### Added
+
+- Changelog !!!
+- cloud platform initial support (opennebula)
+- intermodular octo
+- bootstrap form helpers, intermodular sessions
+
+### Deleted
+
+- support-pack associations
+
+### Fixed
+
+- tonns of them
+
+

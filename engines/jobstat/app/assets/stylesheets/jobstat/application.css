@@ -12,7 +12,7 @@
  *
  *= require jquery-tablesorter/theme.bootstrap
  *= require jquery-tablesorter/theme.blue
- *= require jquery-tablesorter/theme.default
+ * = r jquery-tablesorter/theme.default
  *= require_tree .
  *= require_self
  */
@@ -22,4 +22,8 @@
   border-radius: 5px;
   border-width: 2px;
   background-color: #eee;
+}
+.modal-backdrop.fade.in {
+  height:100%;
+  position: fixed;
 }

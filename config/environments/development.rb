@@ -1,7 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.octo_feedback_host = 'http://graphit.parallel.ru:8123'
+  config.octo_feedback_host = 'http://188.44.52.38:28082'
+  config.octo_jd_host = 'http://188.44.52.38:28081'
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -41,9 +43,10 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "localhost:9000" }
   config.serve_static_files = true
   config.assets.compile = true
+  config.assets.compress = true
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = Uglifier.new(:output => {:beautify => true, :indent_level => 2}, :mangle => false ,:harmony => true)
+  #! ATTENTION! May break assets:precompile!    config.assets.js_compressor = Uglifier.new(:output => {:beautify => true, :indent_level => 2}, :mangle => false ,:harmony => true)
 
 
   # Print deprecation notices to the Rails logger.
@@ -80,4 +83,7 @@ Rails.application.configure do
   config.factory_bot.definition_file_paths += Dir[Rails.root.join('engines/*/spec/factories')]
 
   config.i18n.fallbacks = [I18n.default_locale]
+  logger           = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 end

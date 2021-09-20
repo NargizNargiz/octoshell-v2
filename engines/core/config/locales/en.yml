@@ -292,9 +292,18 @@ en:
       core/request: Request for accessing the cluster
       core/research_area: Research area
       core/surety: Surety
+  admin:
+    notices:
+      other: Other
+      per-user: Per-user
+      site-wide: Site-wide
   answers:
-    noo: false
-    yess: true
+    'false': no
+    noo: no
+    other: other
+    'true': no
+    yess: yes
+  change: change
   choose_value: Choose a value
   core:
     admin:
@@ -334,20 +343,20 @@ en:
           remove_partition: remove partition
           remove_quota: remove quota
         index:
-          confirm: Confirm
+          confirm: Are you sure?
           delete: Delete
           edit: Edit
-          new_cluster: New cluster
-          no_clusters_found: No clusters found
+          new_cluster: Create a new cluster
+          no_clusters_found: No clusters have been found
           quotas_info: Quotas info
           title: Clusters list
         new:
           title: New cluster
         show:
-          info: Info
+          info: Cluster information
           partitions: Partitions
           pub_key_help_html: Pub key help html
-          quotas_info: Quotas info
+          quotas_info: Resources quota
           show_logs: Show logs
       countries:
         destroy:
@@ -395,6 +404,66 @@ en:
           title: Edit group of research areas
         new:
           title: New group of research areas
+      notices:
+        create:
+          notice_failed: Cannot create notice
+          notice_succeed: Notice created
+        edit:
+          title: 'TRME TRME '
+        form:
+          action: Action
+          active: Active?
+          category: Category
+          for_all: For all
+          message: Message
+          none: none
+          personal: Personal
+          show_from: Show from
+          show_till: Show till
+          sourceable: User/other
+          type: Type
+        index:
+          active: active
+          category: category
+          inactive: inactive
+          my_notices: my notices
+          new_notice: Create notice
+          'no': No
+          none: None
+          site_wide_notices: Site-wide notices
+          table:
+            action: Action
+            active: Active?
+            category: Category
+            message: Message
+            show_from: Show from
+            show_till: Show till
+            sourceable: User/other
+            type: Type
+          title: Notices
+          'yes': yes
+        new:
+          title: New notice
+        other: other
+        per-user: Per-user
+        show:
+          none: none
+          notices: notices
+          other: other
+          personal: per-user
+          site-wide: site-wide
+        site-wide: site-wide
+        table:
+          action: action
+          active: active?
+          category: category
+          kind: kind
+          message: message
+          show_from: show from
+          show_till: show till
+          source_name: source name
+          sourceable: sourceable
+          visible: visible
       organization_kinds:
         edit:
           title: Edit organization kind
@@ -576,7 +645,7 @@ en:
           delete_group: Delete group
           edit_group: Edit group
           new_group_of_research_area: Add a group of research areas
-          new_research_area: Add aresearch area
+          new_research_area: Add a research area
           no_research_areas_found: No research areas have been found
           title: Research area
         new:
@@ -610,6 +679,17 @@ en:
           no_users_found: No users have been found
           reactivate: Reactivate
           title: Resources user access management
+    bot_links:
+      list:
+        bot_links: Bot token
+        confirm: >-
+          If you generate a new tokel old bots should be updated. Are you sure?
+        generate_token: Generate token
+        msg_help_token: >-
+          Tokens are used to connect Octoshell profile with bots. You'll need to
+          enter token in the bot interface to be able to interact woth your profile
+          in Octoshell via bot.
+        no_bot_links_found: Create new token to interact with Octoshell via bot.
     credentials:
       list:
         add_credential: Add public key
@@ -771,6 +851,37 @@ en:
         title: Invitation to the  "%{project_title}" project
       form:
         nothing: Without department
+    notice:
+      notices_menu: Notices
+      notices_menu_count:
+        html: Notices <span class="badge info">%{count}</span>
+    notices:
+      create:
+        notice_failed: Failed to create the notice.
+        notice_succeed: Notice created
+      form:
+        for_all: site-wide
+        other: other
+        personal: per-user
+        show_from: show from
+        show_till: show till
+        visible: visible
+      index:
+        active: Active
+        category: Category
+        hidden-by-user: Hidden by user
+        message: Message
+        my_notices: My notices
+        no_notices: No notices
+        site_wide_notices: Site-wide notices
+        title: Notices
+        visible: VBisible
+      table:
+        for_all: Site-wide
+        personal: Per-user
+        show_from: show from
+        show_till: Show till
+        visible: Visible
     notificator:
       check:
         show: Show record page
@@ -949,4 +1060,5 @@ en:
     template_saved: The template has been saved
     you_have_to_fill_departments: You have to fill departments for the organization!
   'no': false
+  none: none
   'yes': true

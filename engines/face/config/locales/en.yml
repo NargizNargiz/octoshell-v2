@@ -1,5 +1,6 @@
 ---
 en:
+  not-specified: Not specified
   actions:
     confirm: Are you sure?
     delete: Delete
@@ -9,6 +10,8 @@ en:
     next: Continue
     save: Save
     send: Send
+  buttons:
+    save: Save
   date:
     abbr_day_names:
     - Sun.
@@ -206,6 +209,8 @@ en:
     shared:
       admin_submenu:
         more: 'More '
+      new_submenu:
+        more: 'TRME TRME '
       submenu:
         more: 'More '
       user_submenu:

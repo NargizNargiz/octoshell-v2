@@ -12,8 +12,10 @@ div class="container" id="intro-step2" data-disable-interaction="1"
       = f.submit t('.show'), class: 'col-md-1 btn btn-success'
       span class='col-md-1'
         | &nbsp;
-      span class='col-md-10'
+      span class='col-md-3'
         = f.check_box :only_long, name: :only_long, label: t('.only_long'), checked: true
+      span class='col-md-3'
+        = f.check_box :only_with_data, name: :only_with_data, label: t('.only_with_data')
     = f.hidden_field :fake_data, value: @fake_data
       
 javascript:
@@ -28,7 +30,8 @@ javascript:
         $(id + ' option:first-child').attr("selected", "selected");
     }
 
-    $("#_only_long").prop('checked', #{@params[:only_long].to_i == 1});
+    $("#only_long").prop('checked', #{@params[:only_long].to_i == 1});
+    $("#only_with_data").prop('checked', #{@params[:only_with_data].to_i == 1});
     // dirty hack to force select2 select to show SELECTED item...
-    $("#_clusrter").select2().select2('val',$("#_clusrter").val());
+    // $("#cluster").select2().select2('val',$("#cluster").val());
   });

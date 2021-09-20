@@ -3,8 +3,13 @@ module Sessions
     layout "layouts/sessions/user"
 
     def index
-      @search = current_user.reports.search(params[:q] || default_index_params)
-      @reports = @search.result(distinct: true).page(params[:page])
+      if current_user
+        @search = current_user.reports.search(params[:q] || default_index_params)
+        @reports = @search.result(distinct: true).page(params[:page])
+      else
+        @search = Report.none
+        @reports = []
+      end
     end
 
     def accept
@@ -37,8 +42,12 @@ module Sessions
 
     def show
       @report = get_report(params[:id])
-      @reply = @report.replies.build do |reply|
-        reply.user = current_user
+      if @report.empty?
+        @reply = Sessions::ReportReply.none
+      else
+        @reply = @report.replies.build do |reply|
+          reply.user = current_user
+        end
       end
     end
 
@@ -86,7 +95,7 @@ module Sessions
     end
 
     def get_report(id)
-      current_user.reports.find(id)
+      current_user ? current_user.reports.find(id) : Sessions::Report.none
     end
 
     def reply_params

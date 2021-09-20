@@ -22,6 +22,9 @@ User.class_eval do
   end
 
   scope :finder, (lambda do |q|
+    # where("lower(name) like :q OR lower(email) like :q OR CAST(id AS TEXT) like :q",
+    #       q: "%#{q.mb_chars.downcase}%")
+    # .order("name asc")
     string = %w[profiles.last_name profiles.first_name profiles.middle_name email].join("||' '||")
     #!!! WARNING !!! Postgresql extension!!!
     joins(:profile).where("(#{string}) ILIKE ?", "%#{q}%")

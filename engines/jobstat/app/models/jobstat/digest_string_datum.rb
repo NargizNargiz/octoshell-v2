@@ -8,7 +8,7 @@
 #  value      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  job_id     :integer
+#  job_id     :bigint(8)
 #
 # Indexes
 #
@@ -17,5 +17,8 @@
 
 module Jobstat
   class DigestStringDatum < ApplicationRecord
+    def versions_enabled
+      false
+    end
   end
 end

@@ -7,7 +7,7 @@
 #  value      :float
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  job_id     :integer
+#  job_id     :bigint(8)
 #
 # Indexes
 #
@@ -16,5 +16,8 @@
 
 module Jobstat
   class FloatDatum < ApplicationRecord
+    def versions_enabled
+      false
+    end
   end
 end

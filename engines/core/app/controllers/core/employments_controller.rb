@@ -4,6 +4,8 @@ module Core
 
     before_action :filter_blocked_users
 
+    before_action :filter_blocked_users
+
     def new
       @employment = current_user.employments.build do |employment|
         hash = employment_params
@@ -54,7 +56,7 @@ module Core
       if params[:employment].present?
         params.require(:employment).permit(:organization_id,
                                            :organization_department_id,
-                                           #:organization_department_name,
+                                           :organization_department_name,
                                            :primary,
                                            positions_attributes: [:id, :name, :value,:field_id,
                                                                   :employment_position_name_id])

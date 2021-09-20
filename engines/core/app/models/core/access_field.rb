@@ -4,7 +4,7 @@
 #
 #  id            :integer          not null, primary key
 #  quota         :integer
-#  used          :integer          default(0)
+#  used          :integer          default("0")
 #  access_id     :integer
 #  quota_kind_id :integer
 #
@@ -12,7 +12,6 @@
 #
 #  index_core_access_fields_on_access_id  (access_id)
 #
-
 module Core
   class AccessField < ApplicationRecord
     belongs_to :access
