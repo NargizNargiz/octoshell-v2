@@ -1,6 +1,6 @@
 module Core
   class ApplicationController < ::ApplicationController #ActionController::Base
-    before_action :require_login
+    # before_action :require_login
     layout "layouts/application"
 
     def provide_cities_hash
@@ -14,7 +14,12 @@ module Core
     end
 
     def filter_blocked_users
-      redirect_to projects_path if current_user.closed?
+      if current_user
+        redirect_to projects_path if current_user.closed?
+      else
+        flash_message :alert, 'Not logged in!'
+        redirect_to projects_path
+      end
     end
 
 #    before_action :journal_user

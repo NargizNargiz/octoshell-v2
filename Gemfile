@@ -1,6 +1,14 @@
 source "https://rubygems.org"
 gem "rake"
 gem "rails", "~> 5.0"
+#-----------------------------------------
+if ENV['HONEYBADGER'].to_s != ''
+  gem "honeybadger", "~> 4.8"
+end
+if ENV['AIRBRAKE'].to_s != ''
+  gem "airbrake"
+end
+#-----------------------------------------
 gem 'bootsnap'
 gem 'listen'
 platforms :jruby do
@@ -35,7 +43,7 @@ group :development do
   gem "pry-rails"
   gem "rails-erd"
   gem 'railroady'
-  gem "better_errors"
+  #gem "better_errors"
   gem 'rails_db'
   gem 'i18n-tasks', github: 'apaokin/i18n-tasks'
   gem 'minitest-reporters'
@@ -50,16 +58,16 @@ gem "mina" #, github: "zhum/mina", require: false
 #gem "mina-rails"
 #gem "mina-git"
 
-gem "rollbar"
+#gem "rollbar"
 gem "foreman"
 gem "puma"
+gem "octoface",       path: "engines/octoface"
 gem "face",           path: "engines/face"
 gem "authentication", path: "engines/authentication"
 gem "core",           path: "engines/core"
 gem "support",        path: "engines/support"
 gem "sessions",       path: "engines/sessions"
 gem "statistics",     path: "engines/statistics"
-gem "wiki",           path: "engines/wiki"
 gem "wikiplus",       path: "engines/wikiplus"
 gem "announcements",  path: "engines/announcements"
 gem "jobstat",        path: 'engines/jobstat'
@@ -68,13 +76,14 @@ gem "pack",           path: "engines/pack"
 gem "hardware",       path: "engines/hardware"
 gem "reports",       path: "engines/reports"
 gem "api",            path: "engines/api"
+gem 'cloud_computing', path: 'engines/cloud_computing'
 
 gem "jquery-rails"
 gem "jquery-ui-rails"
 gem "jquery-tablesorter"
 
 gem "config", github: 'railsconfig/config'
-gem "decorators", "~> 1.0.0"
+gem "decorators", '~> 2.0.3'
 gem 'active_record_union'
 gem "whenever"
 
@@ -99,3 +108,4 @@ end
 
 gem 'rollback', path: 'rollback'
 gem 'rails-erd', group: :development
+gem 'sprockets-rails', '2.3.3'

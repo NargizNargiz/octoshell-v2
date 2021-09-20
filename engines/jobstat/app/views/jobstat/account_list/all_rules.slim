@@ -69,10 +69,14 @@ section class="accordion"
         = rule['description']
       article class="hh"
         /p <strong>Описание:</strong> #{rule['comment']}
+        p class="hidden hidden_name"
+          strong
+            = "id: "
+            = rule['name']
         p
           strong
             = t('.possible_cause')
-          = rule['suggestion']
+          = rule['supposition']
         p
           strong
             = t('.recommendation')
@@ -83,7 +87,7 @@ javascript:
   var filters=#{{@filters.to_json}}
   var emails=#{{@emails.to_json}}
   var current_user=#{{@current_user.id}};
-  var feedback_url='#{{url_for ["account_list","feedback"]}}';
+  var feedback_url='#{{url_for [:account_list,:feedback]}}';
 
   
   $(function(){
@@ -101,6 +105,11 @@ javascript:
       $("#btn-email-"+rule).addClass("tinted")
     })
 
+    document.onkeyup = function (e) {
+        if (e.ctrlKey && e.which == 89) {
+            $(".hidden_name").toggleClass('hidden')
+        }
+    };
   });
 
   function on_new_rule_suggest(){

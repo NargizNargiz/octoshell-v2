@@ -1,5 +1,12 @@
 ---
 ru:
+  '':
+    core:
+      admin:
+        notices:
+          other: 'TRME '
+          per-user: 'TRME '
+          site-wide: 'TRME '
   "!": "!"
   abilities:
     accesses:
@@ -221,6 +228,7 @@ ru:
     emails: Emails
     groups: Группы доступа
     journal: Журнал
+    octoface: Модули Octoshell
     options: Опции
     organization_kinds: Типы организаций
     organizations: Организации
@@ -247,12 +255,14 @@ ru:
     wikiplus: Справка
   bad_job: 'Проблемная задача: '
   bad_jobs: 'Проблемные задачи: '
-  buttons:
-    save: Сохранить
   common:
     back: Назад
   delete: Удалить
-  edit: Редактировать
+  engine_submenu:
+    jobs_by_projects: Заданий по проектам
+    jobs_by_tags: Заданий по тегам
+    jobs_by_users: Заданий по пользователям
+    jobs_total: Заданий всего
   flash:
     not_authorized: У вас недостаточно прав для доступа.
     not_logged_in: Вы не вошли в систему. Войдите или зарегистрируйтесь.
@@ -269,6 +279,7 @@ ru:
           one: Показано <b>1</b>
           other: Показаны <b>все %{count}</b>
           zero: Показано <b>0</b>
+  hidden: 'TRME '
   main_menu:
     admin_area: Кабинет администратора
     wiki: Справка
@@ -289,10 +300,13 @@ ru:
       show: Показать форму
       value_with_category: Значение автозаполнением
       value_without_category: Значение без автозаполнения
+      with_category: Автозаполнение
+      without_category: Без автозаполнения
     form:
       hide: Скрыть
       new: Новая опция
       show: Показать форму
+  other: 'TRME '
   profiles:
     form:
       info_mails_help: >-
@@ -310,7 +324,7 @@ ru:
     comments: Комментарии
     job_stat: Статистика
     job_table: Эффективность
-    menu_items: Редактировать распложение элементов меню
+    menu_items: Редактировать расположение элементов меню
     packages: Пакеты
     profile: Профиль
     projects: Проекты
@@ -336,6 +350,7 @@ ru:
       next: Следующая
       previous: Предыдущая
       truncate: "..."
+  visible: 'TRME '
   who_types:
     ":": ":"
   without_pagination:

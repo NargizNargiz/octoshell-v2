@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :set_paper_trail_whodunnit
 
   def authorize_admins
+    #logger.error "ADMINS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     authorize!(:access, :admin)
   end
 
@@ -11,6 +12,8 @@ class ApplicationController < ActionController::Base
   end
 
   def not_authorized
+    # logger.error "-------------------------------------------"
+    # logger.error caller(0).join("\n");
     redirect_to main_app.root_path, alert: t("flash.not_authorized")
   end
 
@@ -22,8 +25,25 @@ class ApplicationController < ActionController::Base
   end
 
   def octo_authorize!
-    authorize!(*::Octoface.action_and_subject_by_path(params[:controller]))
+    # logger.warn "AUTH: #{params[:controller]}"
+    ret = authorize!(*::Octoface.action_and_subject_by_path(params[:controller]))
+    # logger.warn "AUTH ret: #{ret}"
+    ret
   end
+
+  def admin_redirect_path
+    if User.superadmins.include? current_user
+      main_app.admin_users_path
+    elsif User.experts.include? current_user
+      sessions.admin_reports_path
+    elsif User.support.include?(current_user) ||
+          current_user.available_topics.any?
+      support.admin_tickets_path
+    else
+      core.projects_path
+    end
+  end
+
 
   def options_attributes
     [:id, :name, :category,
@@ -41,28 +61,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   before_action :journal_user, :check_notices
 
-  # rescue_from MayMay::Unauthorized, with: :not_authorized
-
   def journal_user
     logger.info "JOURNAL: url=#{request.url}/#{request.method}; user_id=#{current_user ? current_user.id : 'none'}"
   end
 
   def check_notices
     return unless current_user
-    return if request[:controller] =~ /\/admin\//
-
-    #FIXME: each category should be processed separately in outstanding code
-    notices = Core::Notice.where(sourceable: current_user, category: 1)
-    return if notices.count==0
-
-    list=[]
-    notices.each do |note|
-      list << note.message
-      #next if flash[:'alert-badjobs'] && flash[:'alert-badjobs'].include?(text)
-      #job=note.linkable
+    #return if request[:controller] =~ /\/admin\//
+    Core::Notice.show_notices(current_user, params, request).each do |data|
+      flash_now_message(data[0],data[1])
     end
-    text = "#{notices.count==1 ? t('bad_job') : t('bad_jobs')} #{list.join '; '}"
-    flash.now[:'alert-badjobs'] = raw text
-
   end
 end

@@ -1,9 +1,12 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.octo_feedback_host = 'http://graphit.parallel.ru:8123'
+  config.octo_feedback_host = 'http://188.44.52.38:28082'
+  config.octo_jd_host = 'http://188.44.52.38:28081'
+
   # Code is not reloaded between requests.
   config.cache_classes = true
+  config.assets.digest = true
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
@@ -108,7 +111,10 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    :address => "smtp.parallel.ru",
+    :address => "localhost",
+    :tls => false,
+    :enable_starttls_auto => false,
+    :ssl => false,
     :port => 25
   }
 

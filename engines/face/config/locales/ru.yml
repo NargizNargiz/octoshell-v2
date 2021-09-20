@@ -9,6 +9,8 @@ ru:
     next: Продолжить
     save: Сохранить
     send: Отправить
+  buttons:
+    save: Сохранить
   date:
     abbr_day_names:
     - Вс
@@ -208,6 +210,8 @@ ru:
     shared:
       admin_submenu:
         more: 'Еще '
+      new_submenu:
+        more: 'TRME '
       submenu:
         more: 'Еще '
       user_submenu:
@@ -216,5 +220,6 @@ ru:
     face:
       application:
         maintaining_organization: НИВЦ МГУ имени М.В. Ломоносова
+  not-specified: Не указано
   util:
     number: "№"

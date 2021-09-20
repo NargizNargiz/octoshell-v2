@@ -64,7 +64,7 @@ div class="row"
         td
           =t('.time')
         td
-          = number_with_precision(@job.get_duration_hours, :precision => 1)
+          = number_with_precision(@job.get_duration_hours, :precision => 1) + " " +  t('.h-short')
       tr
         td
           =t('.nodes')
@@ -141,25 +141,29 @@ div class="row"
 p
   =t('.command_line', line: raw(@job[:command]))
 
-br
+hr
 
 h3 = t('.potential')
 
 p =t('.descr1')
 p =t('.descr2')
 
+// блок первичного анализа
+
+h4 = t('.initial')
+p = t('.descr3')
+
 table class="table table-bordered table-striped"
   tr
     th
-      =t('.type')
     th
       =t('.description')
     th
-      =t('.suggestion')
+      =t('.supposition')
     th
       =t('.recomendation')
 
-  - rules=@job.get_rules(@current_user)
+  - rules = @job_rules_description
   - if rules.length > 0
     - rules.each do |cond|
       - cond_name=cond['name']
@@ -174,8 +178,8 @@ table class="table table-bordered table-striped"
               td style="text-align: center"
                 // current feedback icon
                 - fb = @feedbacks.select{|x| x['condition']==cond_name}[0] || {}
-                - flag_index = fb.fetch('klass',99)
-                i id="af-#{id}-#{cond}" class="#{@agree_flags[flag_index]}" title=("#{t('.no_feedback_yet')}" if flag_index==99)
+                - flag_index = fb.fetch('class',99)
+                i id="af-#{id}-#{cond_name}" class="#{@agree_flags[flag_index]}" title=("#{t('.no_feedback_yet')}" if flag_index==99)
                 |&nbsp;
             tr class='spacer'
               td
@@ -184,71 +188,144 @@ table class="table table-bordered table-striped"
               td style="text-align: center"
                 // "why hide?" dialog
                 - tint = @filters.any?{|x|x==cond_name} ? "tinted" : ""
-                button id="btn-hide-#{cond_name}" class="btn-danger #{tint}" onClick="all_pre_hide_rule('#{cond_name}');$('#text_hide_rule_#{cond_name}').focus();" title="#{t('jobstat.common.hide_show')}"
+                button id="btn-hide-#{cond_name}" class="btn-danger #{tint}" onClick="$('#popup_hide').data('cond', '#{cond_name}');$('#popup_hide').modal();" title="#{t('jobstat.common.hide_show')}"
                   i class="fa-fw far fa-bell-slash"
-                div class="octo-popup content" id="hide_rule_#{cond_name}"
-                  form onSubmit="all_hide_rule('#{cond_name}',false); return false;"
-                    div class="centered x-white"
-                      = t('jobstat.common.why_hide')
-                    input type="text" id="text_hide_rule_#{cond_name}" class="fullwidth" style="display: block"
-                    div class="centered x-white"
-                      button class="btn-info" type="submit"
-                        = t('jobstat.common.hide')
-                      button onClick="$('#hide_rule_#{cond_name}').removeClass('target'); return false;"
-                        = t('jobstat.common.not_hide')
-                a class="octo-close-popup" onClick="$('#hide_rule_#{cond_name}').removeClass('target'); return false"
+
                 | &nbsp;
               td style="text-align: center"
                 // "I disagree with rule" button
-                button class="btn-warning disagree-button" onClick="popup_show('disagree#{id}_#{cond_name}','question_#{id}_#{cond_name}');" title="Не согласен!"
+                button class="btn-warning disagree-button" onclick="$('#popup_disagree').data('id', '#{id}');$('#popup_disagree').data('cond', '#{cond_name}');$('#popup_disagree').modal();" title="Не согласен!"
                   i class="#{@agree_flags[1]}"
                   /"far fa-angry"
                 |&nbsp;
-                // "Disagree" dialog
-                div class="octo-popup container" id="popup_disagree#{id}_#{cond_name}"
-                  form onSubmit="popup_hide('disagree#{id}_#{cond_name}');disagree('#{id}','#{cond_name}',0); return false;"
-                    div class="centered"
-                      = t('jobstat.common.why_dont_agree')
-                    input type="text" id="question_#{id}_#{cond_name}" class="fullwidth"
-                    div class="centered"
-                      button class="btn-info" type="submit"
-                        = t('jobstat.common.send')
-                      button class="btn-info" onClick="return popup_hide('disagree#{id}_#{cond_name}')"
-                        = t('jobstat.common.not_send')
-                a class="octo-close-popup" onClick="return popup_hide('disagree#{id}_#{cond_name}')"
               td style="text-align: center"
-                button class="btn-warning" onClick="popup_show('agree#{id}_#{cond_name}','question_#{id}_#{cond_name}');" title="#{t('jobstat.common.agree_button')}"
+                button class="btn-warning agree-button" onclick="$('#popup_agree').data('id', '#{id}');$('#popup_agree').data('cond', '#{cond_name}');$('#popup_agree').modal();" title="#{t('jobstat.common.agree_button')}"
                   i class="#{@agree_flags[0]}"
                 |&nbsp;
-                // 'Agree' dialog
-                div class="octo-popup container" id="popup_agree#{id}_#{cond_name}"
-                  form onSubmit="popup_hide('agree#{id}_#{cond_name}'); agree('#{id}','#{cond_name}',0,''); return false;"
-                    div class="centered"
-                      button class="btn-info" type="submit"
-                        = t('jobstat.common.agree_rule')
-                      button class="btn-info" onClick="return popup_hide('agree#{id}_#{cond_name}')"
-                        = t('jobstat.common.not_send')
-                a class="octo-close-popup2" onClick="return popup_hide('agree#{id}_#{cond_name}')"
 
         td
-          strong class="hidden_name" style="display: none;"
-            = "id: "
-            = cond['name']
+          p class="hidden_name hidden"
+            strong
+              = "id: "
+              = cond['name']
           = cond['description']
         td
-          = cond['suggestion']
+          = cond['supposition']
         td
           = cond['text_recommendation']
+          - if cond["modules"].length > 0
+            br
+            - cond["modules"].each do |module_info|
+              a class="list-group-item list-group-item-action" href= "detailed?analysis_id=#{module_info["name"]}&id=#{@job.id}"
+                div = module_info['type_text']
+                small = module_info['soft_text']
   - else
     tr
       td colspan="4"
         = t('.no_problems')
 
-br
 
+// блок детального анализа
+- rules = @job_detailed_description
+- type_list = @rules_plus['detailed_analysis_types']
+- if rules.length > 0
+  h4 = t('.detailed')
+  p = "#{t('.descr4_1')} \"#{@detailed_types[0]['type_text']}\" #{t('.descr4_2')} #{@detailed_types[0]['soft_text']}."
+
+  - if @job.initiator != nil
+    p
+      = t('.initiated_by')
+      span = " "
+      a href="#{@job.initiator.id}" ##{@job.initiator.drms_job_id}.
+
+  table class="table table-bordered table-striped"
+    tr
+      th
+      th
+        =t('.description')
+      th
+        =t('.supposition')
+      th
+        =t('.recomendation')
+
+    - rules.each do |cond|
+      - cond_name=cond['name']
+      tr style=("background-color: #ffcccc;" if cond['group']=='disaster')
+        td
+          table
+            tr
+              td style="text-align: center"
+                // rule icon
+                - icon = @rules_plus['groups'].fetch(cond['group'],def_icon)
+                i class="fa-fw align-left inline #{icon['icon']} #{icon['color']}"
+              td style="text-align: center"
+                // current feedback icon
+                - fb = @feedbacks.select{|x| x['condition']==cond_name}[0] || {}
+                - flag_index = fb.fetch('class',99)
+                i id="af-#{id}-#{cond_name}" class="#{@agree_flags[flag_index]}" title=("#{t('.no_feedback_yet')}" if flag_index==99) data="#{fb}"
+                |&nbsp;
+            tr class='spacer'
+              td
+                p
+            tr
+              td style="text-align: center"
+                // "why hide?" dialog
+                - tint = @filters.any? { |x| x == cond_name } ? "tinted" : ""
+                button class="btn-danger #{tint}" onClick="$('#popup_hide').data('cond', '#{cond_name}');$('#popup_hide').modal();" title="#{t('jobstat.common.hide_show')}"
+                  i class="fa-fw far fa-bell-slash"
+                | &nbsp;
+              td style="text-align: center"
+                // "I disagree with rule" button
+                button class="btn-warning disagree-button" onclick="$('#popup_disagree').data('id', '#{id}');$('#popup_disagree').data('cond', '#{cond_name}');$('#popup_disagree').modal();" title="Не согласен!"
+                  i class="#{@agree_flags[1]}"
+                /"far fa-angry"
+                |&nbsp;
+              td style="text-align: center"
+                button class="btn-warning agree-button" onclick="$('#popup_agree').data('id', '#{id}');$('#popup_agree').data('cond', '#{cond_name}');$('#popup_agree').modal();" title="#{t('jobstat.common.agree_button')}"
+                  i class="#{@agree_flags[0]}"
+                |&nbsp;
+        td
+          p class="hidden_name hidden"
+            strong
+              = "id: "
+              = cond['name']
+          = cond['description']
+        td
+          = cond['supposition']
+        td
+          = cond['text_recommendation']
+          - if cond["modules"].length > 0
+            br
+            - cond["modules"].each do |module_info|
+              a class="list-group-item list-group-item-action" href= "detailed?analysis_id=#{module_info["name"]}&id=#{@job.id}"
+                div = module_info['type_text']
+                small = module_info['soft_text']
+
+
+//// Part about detailed analysis
+h4 = t('.detailed_available')
+div class="detailed-available"
+  - type_list.each do |step|
+    a class="list-group-item list-group-item-action" href= "detailed?analysis_id=#{step[0]}&id=#{@job.id}"
+      div = step[1]['type_text']
+      small = step[1]['soft_text']
+
+
+- count_initiatees = @job.initiatees.length
+- if count_initiatees != 0
+  p
+    = t('.initiated_found')
+    br
+    - @job.initiatees.sort_by{ |job| job.id }.each do |cond|
+      a href="#{cond.id}" ##{cond.drms_job_id}
+      br
+
+//// end of part about detailed analysis
+
+hr
 h3 = t('.dynamics')
 
-p = link_to(t('.details'), "https://graphit.parallel.ru:5001/jd/share/" + (@job[:drms_job_id]*2+1).to_s.reverse.to_i.to_s(36))
+p = link_to(t('.details'), "#{Rails.application.config.octo_jd_host}/jd/share/" + (@job[:drms_job_id]*2+1).to_s.reverse.to_i.to_s(36))
 
 div class="row"
   div class="col-md-4" style="height: 250px"
@@ -272,6 +349,126 @@ div class="row"
     h4 = t('.fs')
     div id="g_ib_fs"
 
+
+
+// MODALS FOR POPUP DIALOGS (DISAGREE, HIDE, AGREE)
+div class="modal fade" id="popup_disagree" tabindex="-1" role="dialog"
+  div class="modal-dialog" role="document"
+    div class="modal-content"
+      div class="modal-header"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h5 class="modal-title" id="popup_disagree_label"
+          = t('jobstat.common.why_dont_agree')
+
+      div class="modal-body"
+        form onSubmit="disagree($('#popup_disagree').data('id'),$('#popup_disagree').data('cond'),0, $('#popup_disagree #popup_disagree_question').val()); $('#popup_disagree').modal('hide'); return false;"
+          div class="form-group"
+            input type="text" class="form-control" id="popup_disagree_question"
+            input type="submit" id="disagree-submit-form" class="hidden"
+      div class="modal-footer"
+        label for="disagree-submit-form" class="btn btn-primary"
+          = t('jobstat.common.send')
+        button type="button" class="btn btn-secondary" data-dismiss="modal"
+          = t('jobstat.common.not_send')
+
+div class="modal fade" id="popup_hide" tabindex="-1" role="dialog"
+  div class="modal-dialog" role="document"
+    div class="modal-content"
+      div class="modal-header"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h5 class="modal-title" id="popup_hide_label"
+          = t('jobstat.common.why_hide')
+
+      div class="modal-body"
+        form onSubmit="all_hide_rule($('#popup_hide').data('cond'), false, $('#popup_hide #popup_hide_question').val()); $('#popup_hide').modal('hide'); return false;"
+          div class="form-group"
+            input type="text" class="form-control" id="popup_hide_question"
+            input type="submit" id="hide-submit-form" class="hidden"
+      div class="modal-footer"
+        label for="hide-submit-form" class="btn btn-primary"
+          = t('jobstat.common.hide')
+        button type="button" class="btn btn-secondary" data-dismiss="modal"
+          = t('jobstat.common.not_hide')
+
+div class="modal fade" id="popup_agree" tabindex="-1" role="dialog"
+  div class="modal-dialog" role="document"
+    div class="modal-content"
+      div class="modal-header"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h5 class="modal-title" id="popup_agree_label"
+          = t('jobstat.common.agree_rule_label')
+        form onSubmit="agree($('#popup_agree').data('id'),$('#popup_agree').data('cond'),0,''); $('#popup_agree').modal('hide'); return false;"
+          div class="form-group"
+            input type="submit" id="agree-submit-form" class="hidden"
+      div class="modal-footer"
+        label for="agree-submit-form" class="btn btn-primary"
+          = t('jobstat.common.agree_rule')
+        button type="button" class="btn btn-secondary" data-dismiss="modal"
+          = t('jobstat.common.not_send')
+
+
+
+// MODALS FOR POPUP DIALOGS (DISAGREE, HIDE, AGREE)
+div class="modal fade" id="popup_disagree" tabindex="-1" role="dialog"
+  div class="modal-dialog" role="document"
+    div class="modal-content"
+      div class="modal-header"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h5 class="modal-title" id="popup_disagree_label"
+          = t('jobstat.common.why_dont_agree')
+
+      div class="modal-body"
+        form onSubmit="disagree($('#popup_disagree').data('id'),$('#popup_disagree').data('cond'),0, $('#popup_disagree #popup_disagree_question').val()); $('#popup_disagree').modal('hide'); return false;"
+          div class="form-group"
+            input type="text" class="form-control" id="popup_disagree_question"
+            input type="submit" id="disagree-submit-form" class="hidden"
+      div class="modal-footer"
+        label for="disagree-submit-form" class="btn btn-primary"
+          = t('jobstat.common.send')
+        button type="button" class="btn btn-secondary" data-dismiss="modal"
+          = t('jobstat.common.not_send')
+
+div class="modal fade" id="popup_hide" tabindex="-1" role="dialog"
+  div class="modal-dialog" role="document"
+    div class="modal-content"
+      div class="modal-header"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h5 class="modal-title" id="popup_hide_label"
+          = t('jobstat.common.why_hide')
+
+      div class="modal-body"
+        form onSubmit="all_hide_rule($('#popup_hide').data('cond'), false, $('#popup_hide #popup_hide_question').val()); $('#popup_hide').modal('hide'); return false;"
+          div class="form-group"
+            input type="text" class="form-control" id="popup_hide_question"
+            input type="submit" id="hide-submit-form" class="hidden"
+      div class="modal-footer"
+        label for="hide-submit-form" class="btn btn-primary"
+          = t('jobstat.common.hide')
+        button type="button" class="btn btn-secondary" data-dismiss="modal"
+          = t('jobstat.common.not_hide')
+
+div class="modal fade" id="popup_agree" tabindex="-1" role="dialog"
+  div class="modal-dialog" role="document"
+    div class="modal-content"
+      div class="modal-header"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h5 class="modal-title" id="popup_agree_label"
+          = t('jobstat.common.agree_rule_label')
+        form onSubmit="agree($('#popup_agree').data('id'),$('#popup_agree').data('cond'),0,''); $('#popup_agree').modal('hide'); return false;"
+          div class="form-group"
+            input type="submit" id="agree-submit-form" class="hidden"
+      div class="modal-footer"
+        label for="agree-submit-form" class="btn btn-primary"
+          = t('jobstat.common.agree_rule')
+        button type="button" class="btn btn-secondary" data-dismiss="modal"
+          = t('jobstat.common.not_send')
+
 script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"
 
 javascript:
@@ -280,14 +477,16 @@ javascript:
   var current_user=#{{@current_user.id}};
   var jobs=#{{@jobs_plus.to_json}};
   var jobs_feedback=#{{@jobs_feedback.to_json}};
-  var feedback_url='#{{url_for ["account_list","feedback"]}}';
+  var feedback_url='#{{url_for [:account_list,:feedback]}}';
   var agree_flags=#{{@agree_flags.to_json}};
 
   function DrawSingleGraph(target, sensor_data, max)
   {
-    for(var i = 0; i < sensor_data.length; i++)
-      sensor_data[i][0] = new Date(sensor_data[i][0]*1000);
-
+    var max_val = 0;
+    for(var i = 0; i < sensor_data.length; i++){
+      sensor_data[i][0] = new Date(sensor_data[i][0] * 1000);
+      max_val = Math.max(max_val, sensor_data[i][1]);
+    }
     var data = new google.visualization.DataTable();
     data.addColumn('date', "#{{t('.time')}}" );
     data.addColumn('number', "#{{t('.value')}}");
@@ -306,7 +505,8 @@ javascript:
       chartArea: {'width': '85%'},
       legend: {'position': 'none'},
     };
-
+    if (max_val < 1)
+        options.vAxis.maxValue = 1;
     if(max) options.vAxis.maxValue = max;
 
     var chart = new google.visualization.LineChart(document.getElementById(target));
@@ -315,11 +515,13 @@ javascript:
 
   function DrawSendRecvGraph(target, sensor_data)
   {
+    var max_val = 0;
     for(var i = 0; i < sensor_data.length; i++)
     {
       sensor_data[i][0] = new Date(sensor_data[i][0]*1000);
       sensor_data[i][1] /= 1024 * 1024;
       sensor_data[i][2] /= 1024 * 1024;
+      max_val = Math.max(max_val, sensor_data[i][1], sensor_data[i][2]);
     }
 
     var data = new google.visualization.DataTable();
@@ -343,6 +545,8 @@ javascript:
       legend: {'position': 'bottom'},
     };
 
+    if (max_val < 1)
+        options.vAxis.maxValue = 1;
     var chart = new google.visualization.LineChart(document.getElementById(target));
     chart.draw(data, options);
   }
@@ -363,7 +567,7 @@ javascript:
 
     document.onkeyup=function(e) {
       if (e.ctrlKey && e.which == 89){
-        $(".hidden_name").css('display','block')
+        $(".hidden_name").toggleClass('hidden')
       }
     };
     

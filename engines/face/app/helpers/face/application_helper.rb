@@ -108,12 +108,11 @@ module Face
       "#{text}#{js}".html_safe
     end
 
-    def display_wiki_link(name)
-      page = Wikiplus.engines_links[name].first
-      return '' unless page
-
-      link_to page.name, wikiplus.page_path(page)
-    end
+    # def display_wiki_link(name)
+    #   page = Wikiplus.engines_links[name].first
+    #   return '' unless page
+    #   link_to page.name, wikiplus.page_path(page)
+    # end
 
     # def markdown_edit(&block)
     #   puts capture(&block)
@@ -177,9 +176,9 @@ module Face
     }
     end
 
-    def display_all_tag
+    def display_all_tag tag='q'
       content_tag(:div, class: "col-xs-12") do
-        check_box_tag('q[display_all]', '1', display_all_applied?) +
+        check_box_tag("#{tag}[display_all]", '1', display_all_applied?) +
         label_tag(t('without_pagination.display_all_records'))
       end
     end
@@ -191,15 +190,15 @@ module Face
 
 
     def bootstrap_class_for(flash_type)
-      case flash_type
-      when "success"
-        "alert-success" # Green
-      when "error"
-        "alert-danger" # Red
-      when "alert"
-        "alert-warning" # Yellow
-      when "notice"
-        "alert-info" # Blue
+      case flash_type.to_s
+      when 'success', 'ok'
+        'alert-success' # Green
+      when 'error', 'danger'
+        'alert-danger' # Red
+      when 'alert', 'warn', 'warning'
+        'alert-warning' # Yellow
+      when 'notice', 'info'
+        'alert-info' # Blue
       else
         flash_type
       end
@@ -258,6 +257,12 @@ module Face
 
     def hard_markdown(text)
       CommonMarker.render_html(text, [:DEFAULT,:GITHUB_PRE_LANG, :UNSAFE, :TABLE_PREFER_STYLE_ATTRIBUTES],[:table,:autolink]).html_safe
+    end
+
+    def form_group_check_box(f, attribute)
+      f.form_group attribute, label: { text: f.object.class.human_attribute_name(attribute) } do
+        f.check_box attribute, label: ''
+      end
     end
   end
 end

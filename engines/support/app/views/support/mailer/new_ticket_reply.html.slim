@@ -1,5 +1,5 @@
 = render "header"
-- @ticket.replies.order(created_at: :desc).last(3).each do |reply|
+- @ticket.replies.order(:created_at).last(3).each do |reply|
   blockquote
     p
       strong = reply.author.full_name
@@ -7,7 +7,8 @@
 - if (Support.user_class.support | Support.user_class.superadmins).include?(@user)
   p = link_to t('.show_request_details'), polymorphic_url([:admin, @ticket], anchor: 'reply')
 - else
-  p = link_to t('.show_request_details'), polymorphic_url([:admin, @ticket], anchor: 'reply')
+  p = link_to t('.show_request_details'), polymorphic_url([@ticket], anchor: 'reply')
+
 
 = render "footer"
 p
